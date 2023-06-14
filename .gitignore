@@ -1,5 +1,7 @@
 get_ignored_papers.R
 ignorethese.txt
+prepare_schedule.R
+days.xlsx
 abstracts/ICLC16_paper_2.pdf
 abstracts/ICLC16_paper_3.pdf
 abstracts/ICLC16_paper_4.pdf
