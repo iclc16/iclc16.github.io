@@ -1,0 +1,39 @@
+---
+title: "ICLC 16 - General session and theme session papers"
+date: "2023-07-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
+library(readxl)
+library(googlesheets4)
+```
+
+
+(Caution: This list was created automatically and could contain mistakes. In case of doubt, please double-check the time slot in the [schedule](https://iclc16.phil.hhu.de/schedule/).)
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+gs4_deauth()
+tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1M5ZaoYkOrl0PQf3JbWwEz9GYVEwyXPWISGmhIGPSUAQ/edit?usp=sharing", sheet = "Talks")
+# tbl <- read_xlsx("by_author.xlsx")
+# tbl$Decision %>% unique
+tbl <- filter(tbl, Decision %in% c("talk", "talk (remote)", "talk (maybe remote)"))
+
+tbl <- select(tbl, "Last_Name_first_author", Authors, Title, "scheduled_for", "scheduled_time", "scheduled_room", Link, `Theme session`)
+
+tbl$Title <- paste0("<a href=\"", tbl$Link, "\">", tbl$Title, "</a>")
+
+colnames(tbl) <- c("Last_Name_first_author", "Author(s)", "Title", "scheduled for", "scheduled time", "scheduled room", "Link", "Theme session")
+options(DT.options = list(pageLength = 10))
+tbl %>% arrange(Last_Name_first_author) %>% select(-Link, -Last_Name_first_author) %>% datatable(escape = FALSE, filter = list(position = "top"))
+
+
+```
+
+
+[Back to ICLC website](https://iclc16.phil.hhu.de/schedule)
