@@ -19,7 +19,8 @@ library(googlesheets4)
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 gs4_deauth()
-tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1M5ZaoYkOrl0PQf3JbWwEz9GYVEwyXPWISGmhIGPSUAQ/edit?usp=sharing", sheet = "Talks")
+#tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1M5ZaoYkOrl0PQf3JbWwEz9GYVEwyXPWISGmhIGPSUAQ/edit?usp=sharing", sheet = "Talks")
+tbl <- read_xlsx("Talks.xlsx", sheet = "Talks")
 # tbl <- read_xlsx("by_author.xlsx")
 # tbl$Decision %>% unique
 tbl <- filter(tbl, Decision %in% c("talk", "talk (remote)", "talk (maybe remote)"))
