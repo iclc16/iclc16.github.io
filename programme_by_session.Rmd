@@ -1,0 +1,92 @@
+---
+title: "ICLC 16 - General session and theme session papers"
+date: "2023-07-23"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
+library(readxl)
+library(googlesheets4)
+library(htmltools)
+library(writexl)
+```
+
+
+(Caution: This list was created automatically and could contain mistakes. In case of doubt, please double-check the time slot in the [schedule](https://iclc16.phil.hhu.de/schedule/).)
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+gs4_deauth()
+tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1M5ZaoYkOrl0PQf3JbWwEz9GYVEwyXPWISGmhIGPSUAQ/edit?usp=sharing", sheet = "Talks")
+
+# backup
+tbl2 <- tbl
+
+# tbl <- read_xlsx("Talks.xlsx", sheet = "Talks")
+# tbl <- read_xlsx("by_author.xlsx")
+# tbl$Decision %>% unique
+
+# ignore empty lines
+tbl$id <- unlist(sapply(1:nrow(tbl), function(i) ifelse(is.null(unlist(tbl$id[i])), NA, tbl$id[i])))
+
+
+#tbl <- tbl[-which(is.na(tbl$id)),]
+
+tbl <- filter(tbl, Decision %in% c("talk", "talk (remote)", "talk (maybe remote)"))
+
+tbl$livestream <- ifelse(tbl$Decision == "talk (remote)", "remote", tbl$livestream)
+
+tbl <- select(tbl, id, "Last_Name_first_author", Authors, Title, "scheduled_for", "scheduled_time", "scheduled_room", Link, `Theme session`, livestream)
+
+# tbl$Title <- paste0("<a href=\"", tbl$Link, "\">", tbl$Title, "</a>")
+
+colnames(tbl) <- c("Easychair ID", "Last_Name_first_author", "Author(s)", "Title", "scheduled for", "scheduled time", "scheduled room", "Link", "Theme session", "Livestream")
+
+
+
+week_days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+
+
+for(j in 1:14) {
+  
+all_in_session <- list()
+  
+  for(i in 1:length(week_days)) {
+    print(paste0(week_days[i], " Session ", j))
+
+  
+cur_tbl <- tbl[grep(paste0("Session ", j, " "), tbl$`scheduled room`),] %>% filter(`scheduled for` == week_days[i]) %>% arrange(`scheduled time`) %>% select(`Easychair ID`, "Author(s)", "Title", "scheduled time", "Livestream")
+
+all_in_session[[i]] <- cur_tbl
+
+
+# if(i == 1) {
+#   write_xlsx(cur_tbl, file = paste0("Session", j, ".csv"))
+# } else {
+#   write_xlsx(cur_tbl, file = paste0("Session", j, ".csv"), append = T)
+# }
+
+  }
+
+names(all_in_session) <- week_days
+write_xlsx(x = all_in_session, path = paste0("Session", j, ".xlsx"))
+rm(all_in_session)
+  
+}
+
+# print(paste0(week_days[1], " Session ", 1))
+# 
+# tbl[grep(paste0("Session ", 1, " "), tbl$`scheduled room`),] %>% filter(`scheduled for` == week_days[1]) %>% arrange(`scheduled time`) %>% select(`Easychair ID`, "Author(s)", "Title", "scheduled time", "Livestream")
+
+
+
+```
+
+
+[Back to ICLC website](https://iclc16.phil.hhu.de/schedule)
