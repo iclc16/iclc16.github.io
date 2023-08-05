@@ -25,11 +25,11 @@ tbl <- read_sheet("https://docs.google.com/spreadsheets/d/1M5ZaoYkOrl0PQf3JbWwEz
 # tbl$Decision %>% unique
 tbl <- filter(tbl, Decision %in% c("talk", "talk (remote)", "talk (maybe remote)"))
 
-tbl <- select(tbl, "Last_Name_first_author", Authors, Title, "scheduled_for", "scheduled_time", "scheduled_room", Link, `Theme session`)
+tbl <- select(tbl, "Last_Name_first_author", Authors, Title, "scheduled_for", "scheduled_time", "scheduled_room", Link, `Theme session`, Keywords)
 
 tbl$Title <- paste0("<a href=\"", tbl$Link, "\">", tbl$Title, "</a>")
 
-colnames(tbl) <- c("Last_Name_first_author", "Author(s)", "Title", "scheduled for", "scheduled time", "scheduled room", "Link", "Theme session")
+colnames(tbl) <- c("Last_Name_first_author", "Author(s)", "Title", "scheduled for", "scheduled time", "scheduled room", "Link", "Theme session", "Keywords")
 options(DT.options = list(pageLength = 10))
 tbl %>% arrange(Last_Name_first_author) %>% select(-Link, -Last_Name_first_author) %>% datatable(escape = FALSE, filter = list(position = "top"))
 

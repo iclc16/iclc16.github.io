@@ -75,10 +75,29 @@ all_in_session[[i]] <- cur_tbl
   }
 
 names(all_in_session) <- week_days
-write_xlsx(x = all_in_session, path = paste0("Session", j, ".xlsx"))
+write_xlsx(x = all_in_session, path = paste0("Session", j, "_new.xlsx"))
 rm(all_in_session)
   
 }
+
+
+# check which ones have changed
+
+for(i in 1:5) {
+  x1 <- read_xlsx("Session14.xlsx", sheet = i)
+  x2 <- read_xlsx("Session14_new.xlsx", sheet = i)
+
+  if(all(dim(x1) == dim(x2))) {
+    print(all(na.omit(x1) == na.omit(x2)))
+  } else {
+    print("check")
+  }
+  
+
+}
+
+
+
 
 # print(paste0(week_days[1], " Session ", 1))
 # 
